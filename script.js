@@ -1,6 +1,7 @@
 // API Configuration
 const API_BASE_URL = "https://todo-backend-gokul.onrender.com/api";
-const WS_BASE_URL = 'ws://localhost:8000/ws/todos/';
+const WS_BASE_URL = 'wss://todo-backend-gokul.onrender.com/ws/todos/';
+
 
 // State
 let todos = [];
