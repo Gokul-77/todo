@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234f46e5'><path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z' clip-rule='evenodd'/></svg>" type="image/svg+xml">
+    
+    <!-- TailwindCSS + DaisyUI via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom styles -->
+    <style>
+        .todo-item {
+            transition: all 0.3s ease;
+        }
+        .todo-item:hover {
+            transform: translateX(4px);
+        }
+        .finished-todo {
+            opacity: 0.7;
+        }
+        .date-group {
+            scroll-margin-top: 2rem;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex: 1;
+        }
+    </style>
+</head>
+<body class="bg-base-200">
+    <!-- Navbar -->
+    <div class="navbar bg-primary text-primary-content shadow-lg">
+        <div class="flex-1">
+            <a class="btn btn-ghost normal-case text-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                Todo List
+            </a>
+        </div>
+        <div class="flex-none gap-2">
+            <!-- User Info -->
+            <div class="text-sm hidden md:block">
+                <span>Hi, <strong id="username-display">User</strong></span>
+            </div>
+            
+            <!-- Theme Dropdown -->
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle" aria-label="Theme selector">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </label>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[100] p-2 shadow-lg bg-base-100 text-base-content rounded-box w-52">
+                    <li><a onclick="setTheme('light')">☀️ Light Theme</a></li>
+                    <li><a onclick="setTheme('dark')">🌙 Dark Theme</a></li>
+                    <li><a onclick="setTheme('cupcake')">🧁 Cupcake</a></li>
+                    <li><a onclick="setTheme('forest')">🌲 Forest</a></li>
+                </ul>
+            </div>
+            
+            <!-- User Menu -->
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle avatar placeholder">
+                    <div class="bg-neutral text-neutral-content rounded-full w-10">
+                        <span id="user-avatar">U</span>
+                    </div>
+                </label>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[100] p-2 shadow-lg bg-base-100 text-base-content rounded-box w-52">
+                    <li class="menu-title">
+                        <span id="user-menu-name">User</span>
+                    </li>
+                    <li><a onclick="logout()">🚪 Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8 max-w-4xl main-content">
+        <!-- Stats -->
+        <div class="stats shadow w-full mb-8 bg-base-100">
+            <div class="stat">
+                <div class="stat-figure text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="stat-title">Total Todos</div>
+                <div class="stat-value text-primary" id="total-count">0</div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-figure text-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="stat-title">Completed</div>
+                <div class="stat-value text-success" id="completed-count">0</div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-figure text-warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="stat-title">Pending</div>
+                <div class="stat-value text-warning" id="pending-count">0</div>
+            </div>
+        </div>
+
+        <!-- Add Todo Form -->
+        <div class="card bg-base-100 shadow-xl mb-8">
+            <div class="card-body">
+                <h2 class="card-title">Add New Todo</h2>
+                <form id="add-todo-form" class="flex gap-2">
+                    <input 
+                        type="text" 
+                        id="todo-input" 
+                        placeholder="What needs to be done?" 
+                        class="input input-bordered flex-1" 
+                        required
+                    />
+                    <button type="submit" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="flex justify-center items-center py-8 hidden">
+            <span class="loading loading-spinner loading-lg text-primary"></span>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="error-alert" class="alert alert-error shadow-lg mb-4 hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span id="error-message">Error occurred!</span>
+            <button class="btn btn-sm btn-ghost" onclick="hideError()">✕</button>
+        </div>
+
+        <!-- Success Toast -->
+        <div id="success-toast" class="toast toast-top toast-end hidden">
+            <div class="alert alert-success">
+                <span id="success-message">Success!</span>
+            </div>
+        </div>
+
+        <!-- Todos List -->
+        <div id="todos-container">
+            <!-- Todos will be dynamically inserted here grouped by date -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="card bg-base-100 shadow-xl hidden">
+            <div class="card-body items-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-base-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h2 class="card-title">No todos yet!</h2>
+                <p>Add your first todo to get started.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-4 bg-base-300 text-base-content">
+        <div>
+            <p>Made with ❤️ by Gokul</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

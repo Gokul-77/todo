@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Todo List App</title>
+    
+    <!-- TailwindCSS + DaisyUI via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-base-200">
+    <div class="auth-container">
+        <div class="card w-96 bg-base-100 shadow-2xl">
+            <div class="card-body">
+                <h2 class="card-title text-center text-3xl mb-4" id="auth-title">Login</h2>
+                
+                <!-- Error Alert -->
+                <div id="error-alert" class="alert alert-error shadow-lg mb-4 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span id="error-message">Error occurred!</span>
+                </div>
+                
+                <!-- Login Form -->
+                <form id="login-form">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Username</span>
+                        </label>
+                        <input type="text" id="login-username" placeholder="Enter username" class="input input-bordered" required />
+                    </div>
+                    
+                    <div class="form-control mt-4">
+                        <label class="label">
+                            <span class="label-text">Password</span>
+                        </label>
+                        <input type="password" id="login-password" placeholder="Enter password" class="input input-bordered" required />
+                    </div>
+                    
+                    <div class="form-control mt-6">
+                        <button type="submit" class="btn btn-primary" id="login-btn">
+                            <span class="loading loading-spinner loading-sm hidden" id="login-spinner"></span>
+                            <span id="login-text">Login</span>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Register Form -->
+                <form id="register-form" class="hidden">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Username</span>
+                        </label>
+                        <input type="text" id="register-username" placeholder="Choose username" class="input input-bordered" required />
+                    </div>
+                    
+                    <div class="form-control mt-4">
+                        <label class="label">
+                            <span class="label-text">Email (optional)</span>
+                        </label>
+                        <input type="email" id="register-email" placeholder="your@email.com" class="input input-bordered" />
+                    </div>
+                    
+                    <div class="form-control mt-4">
+                        <label class="label">
+                            <span class="label-text">Password</span>
+                        </label>
+                        <input type="password" id="register-password" placeholder="At least 6 characters" class="input input-bordered" required />
+                    </div>
+                    
+                    <div class="form-control mt-4">
+                        <label class="label">
+                            <span class="label-text">Confirm Password</span>
+                        </label>
+                        <input type="password" id="register-confirm" placeholder="Confirm password" class="input input-bordered" required />
+                    </div>
+                    
+                    <div class="form-control mt-6">
+                        <button type="submit" class="btn btn-primary" id="register-btn">
+                            <span class="loading loading-spinner loading-sm hidden" id="register-spinner"></span>
+                            <span id="register-text">Register</span>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Toggle between Login/Register -->
+                <div class="divider">OR</div>
+                <button class="btn btn-ghost btn-sm" id="toggle-auth">
+                    <span id="toggle-text">Don't have an account? Register</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>

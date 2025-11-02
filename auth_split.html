@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - TodoList</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234f46e5'><path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z' clip-rule='evenodd'/></svg>" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="auth_styles.css">
+</head>
+<body class="bg-base-200">
+    <!-- Theme Toggle -->
+    <div class="fixed top-4 right-4 z-50">
+        <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-circle btn-ghost glass-card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                    <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z" />
+                </svg>
+            </label>
+            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[100] p-2 shadow-lg bg-base-100 rounded-box w-52">
+                <li><a onclick="setTheme('light')">☀️ Light</a></li>
+                <li><a onclick="setTheme('dark')">🌙 Dark</a></li>
+                <li><a onclick="setTheme('cupcake')">🧁 Cupcake</a></li>
+                <li><a onclick="setTheme('forest')">🌲 Forest</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="fixed top-4 left-4 z-50">
+        <a href="index_landing.html" class="btn btn-circle btn-ghost glass-card">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
+            </svg>
+        </a>
+    </div>
+
+    <!-- Split Screen -->
+    <div class="split-container">
+        <!-- Left Panel -->
+        <div id="left-panel" class="flex items-center justify-center p-4 md:p-8 gradient-bg">
+            <div id="login-container" class="w-full max-w-md">
+                <div class="card glass-card shadow-2xl">
+                    <div class="card-body">
+                        <div class="flex justify-center mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 text-primary">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-center mb-2">Welcome Back</h2>
+                        <p class="text-center opacity-70 mb-6">Sign in to your account</p>
+                        
+                        <div id="login-error" class="alert alert-error shadow-lg mb-4 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+                            </svg>
+                            <span id="login-error-message"></span>
+                        </div>
+                        
+                        <form id="login-form">
+                            <div class="form-control">
+                                <label class="label"><span class="label-text">Username</span></label>
+                                <input type="text" id="login-username" placeholder="Enter username" class="input input-bordered" required />
+                            </div>
+                            <div class="form-control mt-4">
+                                <label class="label"><span class="label-text">Password</span></label>
+                                <input type="password" id="login-password" placeholder="Enter password" class="input input-bordered" required />
+                            </div>
+                            <div class="form-control mt-6">
+                                <button type="submit" class="btn btn-primary" id="login-btn">
+                                    <span class="loading loading-spinner loading-sm hidden" id="login-spinner"></span>
+                                    <span id="login-text">Sign In</span>
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="divider">OR</div>
+                        <button class="btn btn-outline btn-block" onclick="switchToSignup()">Create New Account →</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="left-welcome" class="w-full max-w-md hidden-animated text-center">
+                <h2 class="text-5xl font-bold mb-6">Hello, Friend!</h2>
+                <p class="text-xl opacity-80 mb-8">Enter your details and start your journey</p>
+            </div>
+        </div>
+        
+        <!-- Right Panel -->
+        <div id="right-panel" class="flex items-center justify-center p-4 md:p-8 bg-base-100">
+            <div id="right-welcome" class="w-full max-w-md text-center">
+                <h2 class="text-5xl font-bold mb-6">Welcome!</h2>
+                <p class="text-xl opacity-80 mb-8">Login with your personal info</p>
+            </div>
+            
+            <div id="signup-container" class="w-full max-w-md hidden-animated">
+                <div class="card glass-card shadow-2xl">
+                    <div class="card-body">
+                        <div class="flex justify-center mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 text-primary">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-center mb-2">Create Account</h2>
+                        <p class="text-center opacity-70 mb-6">Sign up to get started</p>
+                        
+                        <div id="signup-error" class="alert alert-error shadow-lg mb-4 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+                            </svg>
+                            <span id="signup-error-message"></span>
+                        </div>
+                        
+                        <form id="signup-form">
+                            <div class="form-control">
+                                <label class="label"><span class="label-text">Username</span></label>
+                                <input type="text" id="signup-username" placeholder="Choose username" class="input input-bordered" required />
+                            </div>
+                            <div class="form-control mt-4">
+                                <label class="label"><span class="label-text">Email (optional)</span></label>
+                                <input type="email" id="signup-email" placeholder="your@email.com" class="input input-bordered" />
+                            </div>
+                            <div class="form-control mt-4">
+                                <label class="label"><span class="label-text">Password</span></label>
+                                <input type="password" id="signup-password" placeholder="At least 6 characters" class="input input-bordered" required />
+                            </div>
+                            <div class="form-control mt-4">
+                                <label class="label"><span class="label-text">Confirm Password</span></label>
+                                <input type="password" id="signup-confirm" placeholder="Confirm password" class="input input-bordered" required />
+                            </div>
+                            <div class="form-control mt-6">
+                                <button type="submit" class="btn btn-primary" id="signup-btn">
+                                    <span class="loading loading-spinner loading-sm hidden" id="signup-spinner"></span>
+                                    <span id="signup-text">Sign Up</span>
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="divider">OR</div>
+                        <button class="btn btn-outline btn-block" onclick="switchToLogin()">← Back to Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth_split.js"></script>
+</body>
+</html>
