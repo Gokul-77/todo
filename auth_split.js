@@ -1,5 +1,6 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = "https://todo-backend-gokul.onrender.com/api";
+
 
 // State
 let isLoginMode = true;
